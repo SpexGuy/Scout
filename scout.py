@@ -70,7 +70,7 @@ def search(problem):
                     node.successors.add(succnode)
                     seen[successor] = succnode
                     frontier.append(succnode)
-                    print "    %s [label=\"%s\"]" % (succnode.id, problem.getStringRepr(succnode.state))
+                    print "    %s [label=\"%s\" color=%s]" % (succnode.id, problem.getStringRepr(succnode.state), "black" if succnode.valid else "red")
                     print "    %s -> %s;" % (node.id, succnode.id)
     print "}"
 
