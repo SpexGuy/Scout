@@ -39,6 +39,39 @@ class SquareProblem(Problem):
         return "(%d, %d)" % state
 
 
+class BucketProblem(Problem):
+    def getStartState(self):
+        return (0, 0)
+
+    def getEndState(self):
+        return (4, 0)
+
+    def isValidState(self, state):
+        return True
+
+    def getSuccessors(self, state):
+        if state[0] < 5:
+            # fill large bucket
+            yield (5, state[1])
+            if state[1] > 0:
+                # pour small bucket into large bucket
+                yield (min(5, state[1] + state[0]), max(0, state[1] + state[0] - 5))
+        if state[1] < 3:
+            # fill small bucket
+            yield (state[0], 3)
+            if state[0] > 0:
+                # pour large bucket into small bucket
+                yield (max(0, state[1] + state[0] - 3), min(3, state[1] + state[0]))
+        # dump out the buckets
+        if state[0] > 0:
+            yield (0, state[1])
+        if state[1] > 0:
+            yield (state[0], 0)
+
+    def getStringRepr(self, state):
+        return "%d/5, %d/3" % state
+
+
 class CannibalProblem(Problem):
     def getStartState(self):
         return (3, 3, False)

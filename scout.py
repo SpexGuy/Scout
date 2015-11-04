@@ -38,5 +38,5 @@ def search(problem):
 
 
 if (__name__ == '__main__'):
-    problem = problems.SquareProblem(2)
+    problem = problems.BucketProblem()
     search(problem)
