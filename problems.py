@@ -38,3 +38,40 @@ class SquareProblem(Problem):
     def getStringRepr(self, state):
         return "(%d, %d)" % state
 
+
+class CannibalProblem(Problem):
+    def getStartState(self):
+        return (3, 3, False)
+
+    def getEndState(self):
+        return (0, 0, True)
+
+    def isValidState(self, state):
+        return (state[0] >= state[1] or state[0] == 0) and (state[1] >= state[0] or state[0] == 3)
+
+    def getSuccessors(self, state):
+        if state[2]:
+            if state[0] < 3:
+                yield (state[0]+1, state[1], not state[2])
+            if state[0] < 2:
+                yield (state[0]+2, state[1], not state[2])
+            if state[1] < 3:
+                yield (state[0], state[1]+1, not state[2])
+            if state[1] < 2:
+                yield (state[0], state[1]+2, not state[2])
+            if state[0] < 3 and state[1] < 3:
+                yield (state[0]+1, state[1]+1, not state[2])
+        else:
+            if state[0] > 0:
+                yield (state[0]-1, state[1], not state[2])
+            if state[0] > 1:
+                yield (state[0]-2, state[1], not state[2])
+            if state[1] > 0:
+                yield (state[0], state[1]-1, not state[2])
+            if state[1] > 1:
+                yield (state[0], state[1]-2, not state[2])
+            if state[0] > 0 and state[1] > 0:
+                yield (state[0]-1, state[1]-1, not state[2])
+
+    def getStringRepr(self, state):
+        return "o"*state[0] + "x"*state[1] + (">" if state[2] else "<") + "o"*(3-state[0]) + "x"*(3-state[1])
