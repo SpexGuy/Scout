@@ -1,3 +1,4 @@
+from collections import deque
 
 # Python does not require explicit interfaces,
 # but I believe that code which does is more
@@ -31,8 +32,7 @@ class SquareProblem(Problem):
         return (self.size, self.size)
 
     def isValidState(self, state):
-        return 0 <= state[0] <= self.size and
-               0 <= state[1] <= self.size
+        return 0 <= state[0] <= self.size and 0 <= state[1] <= self.size
 
     def getSuccessors(self, state):
         return [(state[0]+dx, state[1]+dy) for (dx, dy) in [(1, 0), (0, 1), (-1, 0), (0, -1)]]
@@ -40,9 +40,32 @@ class SquareProblem(Problem):
     def getStringRepr(self, state):
         return "(%d, %d)" % state
 
+class Node:
+    def __init__(self, state, valid):
+        self.state = state
+        self.valid = valid
+        self.successors = set()
 
 def search(problem):
-    print "Searching..."
+    state = problem.getStartState()
+    print "Searching starting at %s" % (problem.getStringRepr(state))
+
+    startnode = Node(state, problem.isValidState(state))
+    seen = dict({state: startnode})
+    frontier = deque([startnode])
+    while frontier:
+        node = frontier.popleft()
+        if node.valid:
+            for successor in problem.getSuccessors(node.state):
+                if successor in seen:
+                    node.successors.add(seen[successor])
+                    print "%s => %s" % (problem.getStringRepr(node.state), problem.getStringRepr(seen[successor].state))
+                else:
+                    succnode = Node(successor, problem.isValidState(successor))
+                    node.successors.add(succnode)
+                    seen[successor] = succnode
+                    frontier.append(succnode)
+                    print "%s -> %s" % (problem.getStringRepr(node.state), problem.getStringRepr(succnode.state))
 
 
 
