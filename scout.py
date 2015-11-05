@@ -44,17 +44,22 @@ def printProblemsToStderr():
 
 
 if (__name__ == '__main__'):
+    # usage: python scout.py [problem]
+    # where problem is a callable in problems.py
     if len(sys.argv) > 1:
         try:
+            # don't allow the user to select builtins or the Problem base class. If they do, pretend we couldn't find it.
             if sys.argv[1].startswith("__") or sys.argv[1] == "Problem":
                 raise AttributeError
             problem = getattr(problems, sys.argv[1])()
-        except AttributeError:
+
+        except AttributeError: # getattr failed to find ${sys.argv[1]} in problems
             sys.stderr.write("Couldn't find class or function %s in problems.py\n" % (sys.argv[1]))
             sys.stderr.write("Options are:\n")
             printProblemsToStderr()
             sys.exit(1)
-        except TypeError:
+        
+        except TypeError: # the invocation of the return value of getattr failed
             sys.stderr.write("Failed to invoke %s. problems.%s must be a function or class which takes no arguments.\n" % (sys.argv[0], sys.argv[0]))
             sys.exit(2)
     else:
