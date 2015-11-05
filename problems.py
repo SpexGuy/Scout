@@ -20,7 +20,7 @@ class Problem:
 
 
 class SquareProblem(Problem):
-    def __init__(self, size):
+    def __init__(self, size=2):
         self.size = size
 
     def getStartState(self):
